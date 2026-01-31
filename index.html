@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Affiliate Store</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f6f9}
+header{background:#ff6a00;color:#fff;padding:20px;text-align:center}
+h1{font-size:28px}
+.container{max-width:1100px;margin:auto;padding:20px}
+.form-box{background:#fff;padding:20px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.08);margin-bottom:25px}
+.form-box h2{margin-bottom:15px}
+input,button{padding:10px;margin:6px 0;width:100%;border-radius:6px;border:1px solid #ccc}
+button{background:#ff6a00;color:#fff;border:none;font-weight:bold;cursor:pointer}
+button:hover{opacity:.9}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:15px}
+.card{background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;justify-content:space-between}
+.card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+.card h3{margin:10px 0 5px;font-size:18px}
+.card p{font-size:14px;color:#555}
+.card a{margin-top:10px;text-align:center;background:#ff6a00;color:#fff;text-decoration:none;padding:10px;border-radius:6px;font-weight:bold}
+.footer{text-align:center;padding:20px;background:#222;color:#fff;margin-top:40px}
+</style>
+</head>
+<body><header>
+<h1>My Online Affiliate Store</h1>
+<p>Buy products safely through Daraz</p>
+</header><div class="container"><div class="form-box">
+<h2>Add Daraz Affiliate Product</h2>
+<input id="name" placeholder="Product Name" />
+<input id="price" placeholder="Price (PKR)" />
+<input id="image" placeholder="Image URL" />
+<input id="link" placeholder="Your Daraz Affiliate Link" />
+<button onclick="addProduct()">Add Product</button>
+<p style="font-size:13px;color:#555;margin-top:8px;">
+Paste your Daraz affiliate link. When visitors click and buy, you earn commission.
+</p>
+</div><div class="products" id="productList"></div></div><div class="footer">
+© 2026 My Affiliate Store | Powered by Daraz Affiliate Marketing
+</div><script>
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+function saveProducts(){
+  localStorage.setItem("products", JSON.stringify(products));
+}
+
+function renderProducts(){
+  const list = document.getElementById("productList");
+  list.innerHTML = "";
+
+  products.forEach((p,i)=>{
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${p.image}" alt="product">
+      <h3>${p.name}</h3>
+      <p>Price: ${p.price}</p>
+      <a href="${p.link}" target="_blank">Buy on Daraz</a>
+      <button onclick="removeProduct(${i})" style="background:#e74c3c;margin-top:8px">Remove</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function addProduct(){
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const image = document.getElementById("image").value;
+  const link = document.getElementById("link").value;
+
+  if(!name || !price || !image || !link){
+    alert("Please fill all fields");
+    return;
+  }
+
+  products.push({name,price,image,link});
+  saveProducts();
+  renderProducts();
+
+  document.getElementById("name").value="";
+  document.getElementById("price").value="";
+  document.getElementById("image").value="";
+  document.getElementById("link").value="";
+}
+
+function removeProduct(index){
+  products.splice(index,1);
+  saveProducts();
+  renderProducts();
+}
+
+renderProducts();
+</script></body>
+</html>
